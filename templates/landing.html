@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}AI Interview Room | Your AI interviewer. Your next opportunity.{% endblock %}
+
+{% block content %}
+<section class="view-section active" style="padding-top: 20px;">
+  <div class="hero-section">
+    <div class="hero-tag">
+      <span>⚡ Intelligent Resume-Driven Mock Interviews</span>
+    </div>
+    <h1 class="hero-title">
+      AI Interview Room<br>
+      <span class="gradient-text">“Your AI interviewer. Your next opportunity.”</span>
+    </h1>
+    <p class="hero-subtitle">
+      Experience hyper-realistic virtual interviews tailored specifically to your resume. Log in to upload your resume, face dynamic project cross-examination, and speak your answers using your microphone.
+    </p>
+
+    <div class="hero-cta-group">
+      {% if session.get('user_id') %}
+        <a href="/dashboard" class="btn-primary">
+          <span>📊 Open Your Dashboard</span>
+        </a>
+        <a href="/interview" class="btn-secondary">
+          <span>🎙️ Start New Interview</span>
+        </a>
+      {% else %}
+        <a href="/login" class="btn-primary" id="heroLoginBtn">
+          <span>🔐 Login to Start</span>
+        </a>
+        <a href="/signup" class="btn-secondary" id="heroSignupBtn">
+          <span>✨ Create Account</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-container">
+    <div class="section-header">
+      <h2 class="section-title">Engineered for Authentic Technical Interviews</h2>
+      <p class="section-subtitle">No generic question lists. Your resume is the single source of truth.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">🎤</div>
+        <h3 class="feature-title">Voice Interview</h3>
+        <p class="feature-desc">Speak directly into your microphone. Continuous speech-to-text transcribes your answers in real time with audio waveform visualizers.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">🤖</div>
+        <h3 class="feature-title">AI Interviewer</h3>
+        <p class="feature-desc">Interactive virtual interviewer with natural speech synthesis, animated visual avatar, and attentive audio state indicators.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">🧠</div>
+        <h3 class="feature-title">Adaptive Questions</h3>
+        <p class="feature-desc">The AI probes deeper with contextual follow-ups, explores your architecture claims, and dynamically shifts difficulty.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">📊</div>
+        <h3 class="feature-title">Performance Analysis</h3>
+        <p class="feature-desc">Instant post-interview report with hiring verdicts, technical accuracy, project understanding, and saved interview history.</p>
+      </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="how-it-works" id="howItWorksSection">
+      <div class="section-header" style="margin-bottom: 24px;">
+        <h2 class="section-title" style="font-size: 1.8rem;">How It Works</h2>
+        <p class="section-subtitle">Four seamless steps from login to deep performance analytics</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h4 class="step-title">Create Account & Login</h4>
+          <p class="step-desc">Sign up securely to protect your data and track your interview performance history over time.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h4 class="step-title">Upload Resume</h4>
+          <p class="step-desc">Drag & drop your PDF resume. Our PyMuPDF parser extracts text and detects your core technologies.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h4 class="step-title">Voice Interview</h4>
+          <p class="step-desc">Listen to the AI speak questions aloud, hit 'Start Answer', and explain your technical decisions verbally.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">04</div>
+          <h4 class="step-title">Dashboard & Reports</h4>
+          <p class="step-desc">Review your resume strengths, struggled questions, skills to revise, and track your progress in your dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

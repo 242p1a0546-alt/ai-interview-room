@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | AI Interview Room{% endblock %}
+
+{% block content %}
+<section class="view-section active dashboard-view-section">
+  <!-- Welcome Banner Card -->
+  <div class="dashboard-welcome-card">
+    <div class="welcome-text-group">
+      <div class="welcome-pill">🎯 Candidate Dashboard</div>
+      <h1 class="dashboard-greeting">Welcome back, {{ user.full_name }}! 👋</h1>
+      <p class="dashboard-subheading">
+        Ready for your next interview? Upload your resume PDF and practice with your adaptive AI interviewer.
+      </p>
+    </div>
+
+    <div class="welcome-action-group">
+      <a href="/interview" class="btn-primary btn-hero-action" id="dashboardStartInterviewBtn">
+        <span>🎙️ Start New Interview</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Performance Statistics Cards -->
+  <div class="dashboard-stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon-wrapper">📁</div>
+      <div>
+        <div class="stat-label">Total Interviews</div>
+        <div class="stat-value">{{ interviews|length }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-wrapper">📈</div>
+      <div>
+        <div class="stat-label">Average Score</div>
+        <div class="stat-value">
+          {% if interviews %}
+            {{ (interviews|map(attribute='overall_score')|sum / interviews|length)|round|int }}%
+          {% else %}
+            --%
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-wrapper">🏆</div>
+      <div>
+        <div class="stat-label">Highest Score</div>
+        <div class="stat-value">
+          {% if interviews %}
+            {{ interviews|map(attribute='overall_score')|max }}%
+          {% else %}
+            --%
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-wrapper">⚡</div>
+      <div>
+        <div class="stat-label">System Engine</div>
+        <div class="stat-value" style="font-size: 1.15rem; color: var(--accent-cyan);">Resume-Driven AI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Previous Interviews Section -->
+  <div class="dashboard-history-section">
+    <div class="section-title-row">
+      <h2 class="history-title">
+        <span>📜</span> Previous Interviews
+      </h2>
+      <span class="history-count-badge">{{ interviews|length }} Sessions Recorded</span>
+    </div>
+
+    {% if interviews %}
+      <div class="history-table-container">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Interview Session</th>
+              <th>Overall Score</th>
+              <th>Verdict</th>
+              <th>Date</th>
+              <th>Duration</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in interviews %}
+              <tr>
+                <td>
+                  <div class="session-type-cell">
+                    <span class="type-icon">🎙️</span>
+                    <div>
+                      <div class="session-type-title">{{ item.interview_type|default('Resume-Driven Mock Interview') }}</div>
+                      <div class="session-id-sub">{{ item.session_id[:16] }}...</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="score-pill {% if item.overall_score >= 80 %}score-high{% elif item.overall_score >= 60 %}score-mid{% else %}score-low{% endif %}">
+                    {{ item.overall_score }}%
+                  </span>
+                </td>
+                <td>
+                  <span class="verdict-tag">{{ item.recommendation|default('Completed') }}</span>
+                </td>
+                <td class="date-cell">{{ item.created_at[:10] }}</td>
+                <td class="duration-cell">{{ item.duration|default('06:00') }}</td>
+                <td>
+                  <button type="button" class="btn-secondary view-report-btn" data-session-id="{{ item.session_id }}" style="padding: 6px 14px; font-size: 0.82rem;">
+                    <span>View Report</span>
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <!-- Empty State -->
+      <div class="empty-history-card">
+        <div class="empty-icon">📂</div>
+        <h3 class="empty-title">No interview sessions recorded yet</h3>
+        <p class="empty-desc">Upload your resume PDF and take your first realistic AI mock interview to see your detailed performance report and analytics here.</p>
+        <a href="/interview" class="btn-primary" style="padding: 12px 28px; margin-top: 16px;">
+          <span>Start Your First Interview</span>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Past Report Modal -->
+<div class="modal-overlay" id="reportModal" style="display: none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 class="modal-title">Performance Report Details</h3>
+      <button type="button" class="modal-close-btn" id="modalCloseBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="modalReportContent">
+      <div class="evaluating-banner" style="display: flex;">
+        <div class="spinner"></div>
+        <span>Loading interview performance analytics...</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const reportModal = document.getElementById('reportModal');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalReportContent = document.getElementById('modalReportContent');
+
+    document.querySelectorAll('.view-report-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const sessionId = btn.getAttribute('data-session-id');
+        reportModal.style.display = 'flex';
+        modalReportContent.innerHTML = `
+          <div class="evaluating-banner" style="display: flex;">
+            <div class="spinner"></div>
+            <span>Loading interview performance analytics...</span>
+          </div>`;
+
+        try {
+          const resp = await fetch(`/api/interview/report/${sessionId}`);
+          if (!resp.ok) throw new Error("Could not load report.");
+          const report = await resp.json();
+
+          modalReportContent.innerHTML = `
+            <div style="text-align: center; margin-bottom: 24px;">
+              <div style="font-size: 2.2rem; font-weight: 800; color: #fff;">${report.overall_score || 0}%</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: var(--accent-cyan);">${report.recommendation || 'Completed'}</div>
+              <p style="color: var(--text-muted); margin-top: 8px; font-size: 0.95rem;">${report.summary_verdict || ''}</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+              <div class="report-subcard" style="padding: 16px;">
+                <div style="font-size: 0.85rem; font-weight: 700; color: #34d399; margin-bottom: 8px;">RESUME STRENGTHS</div>
+                <ul class="bullet-list" style="gap: 6px;">
+                  ${(report.resume_strengths || report.strengths || []).map(s => `<li class="bullet-item" style="font-size:0.85rem;"><span class="bullet-icon">✅</span><span>${s}</span></li>`).join('')}
+                </ul>
+              </div>
+
+              <div class="report-subcard" style="padding: 16px;">
+                <div style="font-size: 0.85rem; font-weight: 700; color: #fb7185; margin-bottom: 8px;">WEAK AREAS</div>
+                <ul class="bullet-list" style="gap: 6px;">
+                  ${(report.weak_areas || report.areas_for_improvement || []).map(w => `<li class="bullet-item" style="font-size:0.85rem;"><span class="bullet-icon">💡</span><span>${w}</span></li>`).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+              <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: #fff;">Question Breakdown</h4>
+              <div style="display: flex; flex-direction: column; gap: 12px; max-height: 280px; overflow-y: auto;">
+                ${(report.question_breakdown || []).map(q => `
+                  <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 6px;">
+                      <span>Q${q.question_number}: ${q.question}</span>
+                      <span style="color: var(--accent-cyan);">${q.score}/100</span>
+                    </div>
+                    <div style="font-size: 0.82rem; color: #cbd5e1; margin-bottom: 4px;"><strong>Answer:</strong> "${q.candidate_answer}"</div>
+                    <div style="font-size: 0.8rem; color: #94a3b8;"><strong>Feedback:</strong> ${q.feedback}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+              <button type="button" class="btn-secondary" onclick="window.print()" style="padding: 10px 22px;">🖨️ Print Report</button>
+            </div>
+          `;
+        } catch (e) {
+          modalReportContent.innerHTML = `<div style="color: #fb7185; text-align: center; padding: 20px;">Error loading report details.</div>`;
+        }
+      });
+    });
+
+    modalCloseBtn.addEventListener('click', () => {
+      reportModal.style.display = 'none';
+    });
+
+    reportModal.addEventListener('click', (e) => {
+      if (e.target === reportModal) {
+        reportModal.style.display = 'none';
+      }
+    });
+  });
+</script>
+{% endblock %}

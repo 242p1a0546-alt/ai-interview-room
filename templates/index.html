@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Room | Resume-Driven AI Mock Interviews</title>
+  <meta name="description" content="AI Interview Room is a realistic resume-driven mock interview system. Upload your resume PDF and experience personalized voice interviews, dynamic project deep dives, and instant performance analysis.">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       NAVIGATION BAR
+       ========================================================================= -->
+  <header>
+    <nav class="navbar">
+      <div class="nav-container">
+        <a class="brand-logo" id="navBrandLink">
+          <div class="brand-icon">🎙️</div>
+          <span class="brand-name">AI Interview Room</span>
+        </a>
+        <div class="nav-links">
+          <div class="nav-badge">
+            <span class="pulse-dot"></span>
+            <span>Resume-Driven AI v3.0</span>
+          </div>
+          <button class="btn-secondary" id="navStartBtn" style="padding: 8px 18px; font-size: 0.88rem;">Start Interview</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- =========================================================================
+       VIEW 1: LANDING PAGE (HOME)
+       ========================================================================= -->
+  <main>
+    <section class="view-section active" id="homeView">
+      <div class="hero-section">
+        <div class="hero-tag">
+          <span>⚡ Resume-Driven Intelligence</span>
+        </div>
+        <h1 class="hero-title">
+          AI Interview Room<br>
+          <span class="gradient-text">“Your AI interviewer. Your next opportunity.”</span>
+        </h1>
+        <p class="hero-subtitle">
+          Experience hyper-realistic virtual interviews tailored specifically to your resume. Upload your PDF, face in-depth project cross-questioning, and speak your answers using your microphone.
+        </p>
+
+        <div class="hero-cta-group">
+          <button class="btn-primary" id="heroStartBtn">
+            <span>📄 Upload Resume & Start</span>
+          </button>
+          <button class="btn-secondary" id="heroHowItWorksBtn">
+            <span>Explore How It Works</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="features-container">
+        <div class="section-header">
+          <h2 class="section-title">Engineered for Authentic Technical Interviews</h2>
+          <p class="section-subtitle">No generic question lists. Your resume is the single source of truth.</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">📄</div>
+            <h3 class="feature-title">Resume-Driven Analysis</h3>
+            <p class="feature-desc">Upload your resume PDF. The AI extracts your genuine projects, skills, education, and specific engineering claims automatically.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🎤</div>
+            <h3 class="feature-title">Voice Interview</h3>
+            <p class="feature-desc">Answer using your microphone. Continuous speech-to-text transcribes your answers in real time with audio waveform visualizers.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🧠</div>
+            <h3 class="feature-title">Adaptive Project Probing</h3>
+            <p class="feature-desc">The AI asks deep architectural questions on your projects, challenges your algorithm choices, and dynamically adapts difficulty.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">📊</div>
+            <h3 class="feature-title">Resume-Aware Analytics</h3>
+            <p class="feature-desc">Get assessed on Project Understanding, Resume Knowledge, Technical Accuracy, and receive actionable revision recommendations.</p>
+          </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="how-it-works" id="howItWorksSection">
+          <div class="section-header" style="margin-bottom: 24px;">
+            <h2 class="section-title" style="font-size: 1.8rem;">How It Works</h2>
+            <p class="section-subtitle">A seamless journey from PDF ingestion to in-depth technical cross-examination</p>
+          </div>
+
+          <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-number">01</div>
+              <h4 class="step-title">Upload Resume</h4>
+              <p class="step-desc">Drag & drop your PDF resume. Our PyMuPDF parser extracts text and detects your core technologies.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-number">02</div>
+              <h4 class="step-title">Review Analysis</h4>
+              <p class="step-desc">Verify your parsed skills, projects, and achievements on the confirmation screen before stepping into the room.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-number">03</div>
+              <h4 class="step-title">Speak Your Answers</h4>
+              <p class="step-desc">Listen to the AI speak questions aloud, hit 'Start Answer', and explain your technical decisions verbally.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-number">04</div>
+              <h4 class="step-title">Receive Feedback</h4>
+              <p class="step-desc">Review your resume strengths, struggled questions, skills to revise, and tailored project interview advice.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 2: RESUME UPLOAD & CONFIRMATION
+         ========================================================================= -->
+    <section class="view-section" id="setupView">
+      <!-- Step A: Upload Resume Screen -->
+      <div class="setup-card" id="resumeUploadCard">
+        <div class="setup-header">
+          <h2 class="setup-title">Upload Your Resume</h2>
+          <p class="setup-subtitle">Our AI interviewer will analyze your resume and create a personalized interview.</p>
+        </div>
+
+        <div class="upload-dropzone" id="resumeDropzone">
+          <div class="dropzone-icon">📄</div>
+          <div class="dropzone-text-primary">Drag &amp; Drop your resume PDF here</div>
+          <div class="dropzone-text-secondary">or</div>
+          <button type="button" class="btn-secondary" id="browseFilesBtn" style="padding: 10px 24px;">
+            <span>Browse Files</span>
+          </button>
+          <input type="file" id="resumeFileInput" accept=".pdf,application/pdf" style="display: none;">
+          <div class="dropzone-hint">Supports text-based PDF resumes (max 10MB)</div>
+        </div>
+
+        <!-- Selected File Status Badge -->
+        <div class="selected-file-chip" id="selectedFileChip" style="display: none;">
+          <div class="file-chip-info">
+            <span class="file-chip-icon">📑</span>
+            <div>
+              <div class="file-chip-name" id="selectedFileName">resume.pdf</div>
+              <div class="file-chip-size" id="selectedFileSize">1.2 MB</div>
+            </div>
+          </div>
+          <button type="button" class="file-chip-remove" id="removeFileBtn" title="Remove selected file">&times;</button>
+        </div>
+
+        <!-- Upload & Analysis Action -->
+        <div style="text-align: center; margin-top: 28px;">
+          <button type="button" class="btn-primary" id="analyzeResumeBtn" style="width: 100%; padding: 18px;" disabled>
+            <span>⚡ Analyze Resume</span>
+          </button>
+        </div>
+
+        <!-- Progress State -->
+        <div class="evaluating-banner" id="uploadProgressBanner" style="display: none; margin-top: 20px;">
+          <div class="spinner"></div>
+          <span id="uploadProgressText">Extracting PDF text and analyzing your technical profile...</span>
+        </div>
+      </div>
+
+      <!-- Step B: Resume Analysis Confirmation Screen (Initially Hidden) -->
+      <div class="setup-card" id="resumeConfirmationCard" style="display: none;">
+        <div class="confirmation-badge-row">
+          <span class="confirmation-pill">Resume Analysis Complete ✓</span>
+        </div>
+
+        <div class="setup-header" style="margin-bottom: 24px; text-align: left;">
+          <h2 class="setup-title" id="confirmedCandidateName">Sudarshan Reddy</h2>
+          <p class="setup-subtitle" id="confirmedCandidateEducation">B.Tech in Computer Science & Engineering</p>
+        </div>
+
+        <!-- Detected Skills -->
+        <div class="confirmation-section">
+          <div class="confirmation-section-title">
+            <span>💻</span> Skills Detected (<span id="skillsCountBadge">0</span>)
+          </div>
+          <div class="skills-tag-cloud" id="confirmedSkillsList">
+            <!-- Skill chips populated here -->
+          </div>
+        </div>
+
+        <!-- Projects Detected -->
+        <div class="confirmation-section">
+          <div class="confirmation-section-title">
+            <span>🚀</span> Projects Detected (<span id="projectsCountBadge">0</span>)
+          </div>
+          <div class="projects-confirmation-list" id="confirmedProjectsList">
+            <!-- Project cards populated here -->
+          </div>
+        </div>
+
+        <!-- Certifications & Experience Grid -->
+        <div class="confirmation-grid-2">
+          <div class="confirmation-section">
+            <div class="confirmation-section-title">
+              <span>📜</span> Certifications
+            </div>
+            <div id="confirmedCertsList" class="confirmation-subtext">No certifications detected</div>
+          </div>
+
+          <div class="confirmation-section">
+            <div class="confirmation-section-title">
+              <span>💼</span> Experience
+            </div>
+            <div id="confirmedExpList" class="confirmation-subtext">No professional experience detected</div>
+          </div>
+        </div>
+
+        <!-- Adaptive Notice Banner -->
+        <div class="adaptive-notice-banner" style="margin-top: 24px;">
+          <div class="notice-icon">🧠</div>
+          <div class="notice-text">
+            <strong>“The AI will determine the length of the interview based on your performance.”</strong>
+            <div style="font-size: 0.82rem; color: #94a3b8; margin-top: 2px;">
+              Your resume is the source of truth. The AI will probe your projects, algorithms, and engineering decisions.
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="confirmation-actions-row">
+          <button type="button" class="btn-primary" id="launchInterviewBtn" style="padding: 18px 36px;">
+            <span>🎙️ Start AI Interview</span>
+          </button>
+          <button type="button" class="btn-secondary" id="reuploadResumeBtn" style="padding: 18px 24px;">
+            <span>Upload Different Resume</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 3: AI INTERVIEW ROOM
+         ========================================================================= -->
+    <section class="view-section" id="roomView">
+      <!-- Room Topbar -->
+      <div class="room-topbar">
+        <div class="room-meta-left">
+          <div class="interview-badge" id="roomTypeBadge">Resume-Driven Interview</div>
+          <div class="difficulty-badge diff-medium" id="roomDifficultyBadge">Medium</div>
+          <div class="room-timer" title="Elapsed interview duration">
+            <span>⏱️</span>
+            <span id="interviewElapsedTimer">00:00</span>
+          </div>
+        </div>
+
+        <div class="room-meta-right">
+          <button class="btn-icon-toggle" id="ttsVoiceToggle" title="Mute/Unmute AI Voice">
+            <span id="ttsIcon">🔊</span>
+          </button>
+          <button class="btn-icon-toggle" id="webcamToggle" title="Toggle Webcam Preview">
+            <span id="camIcon">📷</span>
+          </button>
+          <button class="btn-end-interview" id="earlyEndBtn">End Interview</button>
+        </div>
+      </div>
+
+      <!-- Video Grid (AI Interviewer & Candidate) -->
+      <div class="interview-video-grid">
+        <!-- AI Interviewer Tile -->
+        <div class="video-card ai-card" id="aiVideoCard">
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <span style="font-size: 0.85rem; font-weight: 700; color: #818cf8;">AI INTERVIEWER</span>
+            <span id="aiVoiceModelLabel" style="font-size: 0.78rem; color: #94a3b8;">Neural Voice</span>
+          </div>
+
+          <div class="ai-card-content">
+            <div class="avatar-container">
+              <div class="avatar-ring avatar-ring-1"></div>
+              <div class="avatar-ring avatar-ring-2"></div>
+              <div class="avatar-core" id="aiAvatarCore">🤖</div>
+            </div>
+
+            <div class="ai-status-tag" id="aiStatusTag">
+              <div class="sound-waves" id="aiSoundWaves">
+                <span class="sound-bar"></span>
+                <span class="sound-bar"></span>
+                <span class="sound-bar"></span>
+                <span class="sound-bar"></span>
+                <span class="sound-bar"></span>
+              </div>
+              <span id="aiStatusText">AI Ready</span>
+            </div>
+          </div>
+
+          <div style="font-size: 0.8rem; color: var(--text-dim); text-align: center;">
+            Grounding Source: Candidate Resume
+          </div>
+        </div>
+
+        <!-- Candidate Video Tile -->
+        <div class="video-card candidate-card" id="candidateVideoCard">
+          <video id="webcamVideoElement" class="webcam-stream" autoplay playsinline muted></video>
+          
+          <div class="candidate-avatar-placeholder" id="candidatePlaceholder">
+            <div class="candidate-avatar-circle">🎓</div>
+            <span style="font-size: 0.9rem; color: var(--text-muted);">Webcam Preview Available</span>
+          </div>
+
+          <div class="candidate-name-overlay">
+            <span id="candidateDisplayName">Alex Rivera</span> &bull; <span id="candidateDisplayCollege">University</span>
+          </div>
+
+          <div class="audio-level-meter" id="audioLevelMeter">
+            <div class="audio-level-fill" id="audioLevelFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Banner Card -->
+      <div class="question-banner-card">
+        <div class="question-meta-row">
+          <div class="question-counter-pill">
+            <span>❓</span>
+            <span id="questionCounterLabel">Question 1</span>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <span class="question-category-tag" id="questionCategoryTag">Introduction</span>
+            <div id="followupBadgeContainer" style="display: none;">
+              <span class="followup-badge">🧠 Follow-up</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-text-box" id="questionTextBox">
+          Loading question from interviewer...
+        </div>
+      </div>
+
+      <!-- Microphone & Answer Panel -->
+      <div class="mic-interaction-panel">
+        <div class="mic-status-row">
+          <div class="mic-status-indicator" id="micStatusIndicator">
+            <div class="recording-dot" id="recordingDot"></div>
+            <span id="micStatusText">Microphone Ready. Click Start Answer to speak.</span>
+          </div>
+          <div class="recording-timer" id="recordingTimer">00:00</div>
+        </div>
+
+        <!-- Live Transcript Box -->
+        <div class="transcript-container">
+          <div class="transcript-label">Transcribed Answer (Editable)</div>
+          <div class="transcript-content" id="liveTranscriptBox" contenteditable="true" spellcheck="false" placeholder="Your transcribed answer will appear here in real-time as you speak..."></div>
+        </div>
+
+        <!-- Microphone Controls -->
+        <div class="mic-controls-row">
+          <div class="mic-primary-actions">
+            <!-- Start Answer Button -->
+            <button class="btn-mic-action btn-start-answer" id="startAnswerBtn">
+              <span>🎤</span>
+              <span>Start Answer</span>
+            </button>
+
+            <!-- Stop Answer Button -->
+            <button class="btn-mic-action btn-stop-answer" id="stopAnswerBtn">
+              <span>⏹️</span>
+              <span>Stop Answer</span>
+            </button>
+
+            <!-- Retry Recording Button -->
+            <button class="btn-retry" id="retryAnswerBtn" title="Discard and re-record your answer">
+              <span>🔄 Retry</span>
+            </button>
+          </div>
+
+          <div>
+            <!-- Submit Answer Button -->
+            <button class="btn-mic-action btn-submit-answer" id="submitAnswerBtn" disabled>
+              <span>🚀 Submit Answer</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Evaluating Banner -->
+        <div class="evaluating-banner" id="evaluatingBanner">
+          <div class="spinner"></div>
+          <span>AI is analyzing your response against your resume claims...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 4: RESUME-AWARE PERFORMANCE ANALYSIS DASHBOARD
+         ========================================================================= -->
+    <section class="view-section" id="reportView">
+      <div class="report-header-card">
+        <!-- Circular Score Ring -->
+        <div class="score-gauge-container">
+          <div class="score-circle" id="reportScoreCircle" style="--score-pct: 85;">
+            <div class="score-circle-inner">
+              <span class="score-value" id="reportOverallScore">85</span>
+              <span class="score-total">/ 100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Candidate & Verdict Meta -->
+        <div class="report-meta">
+          <div style="margin-bottom: 12px;">
+            <span class="recommendation-pill badge-strong-hire" id="reportRecBadge">Strong Hire</span>
+          </div>
+          <h2 id="reportCandidateTitle">Interview Performance Analysis</h2>
+          <p id="reportSummaryVerdict">
+            Comprehensive resume verification completed.
+          </p>
+          <div style="display: flex; gap: 24px; font-size: 0.9rem; color: var(--text-muted); flex-wrap: wrap;">
+            <div><strong>Education:</strong> <span id="reportMetaEducation">B.Tech</span></div>
+            <div><strong>Skills Evaluated:</strong> <span id="reportMetaSkills">8</span></div>
+            <div><strong>Questions:</strong> <span id="reportMetaQuestions">5</span></div>
+            <div><strong>Duration:</strong> <span id="reportMetaDuration">08:42</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric Bars and Strengths Grid -->
+      <div class="report-grid-2">
+        <!-- 6 Core Resume & Technical Metrics -->
+        <div class="report-subcard">
+          <h3 class="subcard-title">
+            <span>📊</span> Competency Breakdown
+          </h3>
+
+          <div class="metric-row">
+            <div class="metric-info">
+              <span>Technical Knowledge</span>
+              <span id="metricAccuracyVal">88%</span>
+            </div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar-fill" id="metricAccuracyBar" style="width: 88%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-info">
+              <span>Project Understanding</span>
+              <span id="metricProjVal">85%</span>
+            </div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar-fill" id="metricProjBar" style="width: 85%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-info">
+              <span>Resume Knowledge & Authenticity</span>
+              <span id="metricAuthVal">90%</span>
+            </div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar-fill" id="metricAuthBar" style="width: 90%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-info">
+              <span>Problem Solving & Depth</span>
+              <span id="metricDepthVal">80%</span>
+            </div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar-fill" id="metricDepthBar" style="width: 80%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-info">
+              <span>Communication</span>
+              <span id="metricClarityVal">85%</span>
+            </div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar-fill" id="metricClarityBar" style="width: 85%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-info">
+              <span>Confidence</span>
+              <span id="metricConfidenceVal">86%</span>
+            </div>
+            <div class="metric-bar-bg">
+              <div class="metric-bar-fill" id="metricConfidenceBar" style="width: 86%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resume Strengths & Weak Areas -->
+        <div class="report-subcard">
+          <h3 class="subcard-title">
+            <span>🎯</span> Resume Strengths & Gaps
+          </h3>
+
+          <div style="margin-bottom: 20px;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: #34d399; margin-bottom: 8px; text-transform: uppercase;">
+              Resume Strengths
+            </div>
+            <ul class="bullet-list" id="reportStrengthsList">
+              <li class="bullet-item"><span class="bullet-icon">✅</span> Confirmed strong grasp of project architecture.</li>
+            </ul>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: #fb7185; margin-bottom: 8px; text-transform: uppercase;">
+              Weak Areas
+            </div>
+            <ul class="bullet-list" id="reportImprovementsList">
+              <li class="bullet-item"><span class="bullet-icon">💡</span> Review specific algorithm benchmarks and trade-offs.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revision Recommendations (Skills to Revise & Project Topics to Prepare) -->
+      <div class="report-grid-2">
+        <div class="report-subcard">
+          <h3 class="subcard-title">
+            <span>📚</span> Skills You Should Revise
+          </h3>
+          <div class="skills-tag-cloud" id="reportSkillsToRevise">
+            <span class="skill-tag">Python</span>
+          </div>
+        </div>
+
+        <div class="report-subcard">
+          <h3 class="subcard-title">
+            <span>🛠️</span> Project Topics You Should Prepare
+          </h3>
+          <ul class="bullet-list" id="reportProjectTopics">
+            <li class="bullet-item"><span class="bullet-icon">📌</span> Review system design and pipeline latency.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Question-by-Question Breakdown -->
+      <div class="report-subcard" style="margin-bottom: 32px;">
+        <h3 class="subcard-title">
+          <span>📝</span> Question-by-Question Audit
+        </h3>
+        <div class="question-breakdown-list" id="reportQuestionsList">
+          <!-- Dynamically populated question cards -->
+        </div>
+      </div>
+
+      <!-- Report Action Buttons -->
+      <div class="report-actions-row">
+        <button class="btn-primary" id="reportPrintBtn">
+          <span>🖨️ Print / Save Report (PDF)</span>
+        </button>
+        <button class="btn-secondary" id="reportRetakeBtn">
+          <span>🔄 Practice with Another Resume</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="/static/js/speech.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account | AI Interview Room{% endblock %}
+
+{% block content %}
+<section class="view-section active auth-view-section">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon-circle">✨</div>
+      <h2 class="auth-title">Create Account</h2>
+      <p class="auth-subtitle">Join AI Interview Room to start your realistic mock interviews.</p>
+    </div>
+
+    {% if error %}
+      <div class="auth-alert-box">
+        <span>⚠️</span>
+        <span>{{ error }}</span>
+      </div>
+    {% endif %}
+
+    <form method="POST" action="/signup" id="signupForm" class="auth-form" novalidate>
+      <div class="form-field">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" name="full_name" class="form-input" placeholder="e.g. Sudarshan Reddy" value="{{ full_name|default('') }}" required autofocus>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" class="form-input" placeholder="name@example.com" value="{{ email|default('') }}" required>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label for="password">Password (min 8 chars)</label>
+          <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" minlength="8" required>
+        </div>
+
+        <div class="form-field">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirm_password" class="form-input" placeholder="••••••••" minlength="8" required>
+        </div>
+      </div>
+
+      <div id="passwordMismatchError" class="auth-field-error" style="display: none;">
+        Passwords do not match. Please verify your password.
+      </div>
+
+      <div style="margin-top: 10px;">
+        <button type="submit" class="btn-primary" id="signupSubmitBtn" style="width: 100%; padding: 16px;">
+          <span>🚀 Create Account</span>
+        </button>
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      <span>Already have an account?</span>
+      <a href="/login" class="auth-link">Login here</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const signupForm = document.getElementById('signupForm');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const passwordMismatchError = document.getElementById('passwordMismatchError');
+
+    signupForm.addEventListener('submit', (e) => {
+      if (password.value !== confirmPassword.value) {
+        e.preventDefault();
+        passwordMismatchError.style.display = 'block';
+        confirmPassword.focus();
+        return false;
+      } else {
+        passwordMismatchError.style.display = 'none';
+      }
+
+      if (password.value.length < 8) {
+        e.preventDefault();
+        alert("Password must be at least 8 characters long.");
+        password.focus();
+        return false;
+      }
+    });
+  });
+</script>
+{% endblock %}

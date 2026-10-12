@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}AI Interview Room | AI-Powered Mock Interviews{% endblock %}</title>
+  <meta name="description" content="AI Interview Room - Realistic, voice-driven AI mock interviews grounded in your resume with instant performance analytics.">
+  <link rel="stylesheet" href="/static/css/style.css">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- =========================================================================
+       NAVIGATION BAR
+       ========================================================================= -->
+  <header>
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="/" class="brand-logo" id="navBrandLink">
+          <div class="brand-icon">🎙️</div>
+          <span class="brand-name">AI Interview Room</span>
+        </a>
+
+        <div class="nav-links">
+          <div class="nav-badge">
+            <span class="pulse-dot"></span>
+            <span>Adaptive AI v3.2</span>
+          </div>
+
+          {% if session.get('user_id') %}
+            <!-- Authenticated User Navigation -->
+            <a href="/dashboard" class="nav-item-link {% if request.path == '/dashboard' %}active{% endif %}">
+              <span>📊 Dashboard</span>
+            </a>
+            <a href="/interview" class="btn-primary" style="padding: 8px 18px; font-size: 0.88rem;">
+              <span>🎙️ New Interview</span>
+            </a>
+            <div class="user-profile-menu">
+              <span class="user-profile-chip" title="{{ session.get('user_email') }}">
+                <span>👤</span>
+                <span class="user-chip-name">{{ session.get('user_name', 'Account') }}</span>
+              </span>
+              <a href="/logout" class="btn-logout" title="Log out of your account">Logout</a>
+            </div>
+          {% else %}
+            <!-- Guest Navigation -->
+            <a href="/login" class="btn-secondary" style="padding: 8px 18px; font-size: 0.88rem;">
+              <span>Login</span>
+            </a>
+            <a href="/signup" class="btn-primary" style="padding: 8px 20px; font-size: 0.88rem;">
+              <span>Create Account</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages-container">
+        {% for category, message in messages %}
+          <div class="flash-alert flash-{{ category }}">
+            <span>{% if category == 'error' %}⚠️{% else %}ℹ️{% endif %}</span>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Main Content Block -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
