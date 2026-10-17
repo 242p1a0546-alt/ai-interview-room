@@ -9,6 +9,7 @@
   {% block extra_head %}{% endblock %}
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
   <!-- =========================================================================
        NAVIGATION BAR
@@ -71,7 +72,7 @@
   {% endwith %}
 
   <!-- Main Content Block -->
-  <main>
+  <main id="main-content" tabindex="-1">
     {% block content %}{% endblock %}
   </main>
 
